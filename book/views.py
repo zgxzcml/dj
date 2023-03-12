@@ -1,0 +1,21 @@
+from django.shortcuts import render, redirect
+from .models import Book
+
+# Create your views here.
+def index(request):
+    b = request.user.book_set.all()
+    context = {
+        "bset" :b
+    }
+    return render(request, "book/index.html", context)
+
+def create(request):
+    if request.method == "POST":
+        sn = request.POST.get("sname")
+        sc = request.POST.get("scon")
+        su = request.POST.get("surl")
+        im = bool(request.POST.get("impo"))
+        Book(user=request.user, site_name=sn, site_url=su, site_con=sc, impo=im).save()
+        return redirect("book:index")
+
+    return render(request, "book/create.html")
